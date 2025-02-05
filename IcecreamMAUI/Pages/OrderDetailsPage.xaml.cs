@@ -1,8 +1,8 @@
 namespace IcecreamMAUI.Pages;
 
-public partial class OrderDetails : ContentPage
+public partial class OrderDetailsPage : ContentPage
 {
-	public OrderDetails()
+	public OrderDetailsPage()
 	{
 		InitializeComponent();
 	}

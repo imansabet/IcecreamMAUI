@@ -18,7 +18,9 @@
             Title="Home"
             Icon="home"    
             ContentTemplate="{DataTemplate pages:HomePage}"
-            Route="HomePage" />
+            Route="HomePage" 
+           
+            />
         <ShellContent
             Title="Cart"
             Icon="cart"    
