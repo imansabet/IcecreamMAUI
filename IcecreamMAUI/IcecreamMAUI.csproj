@@ -68,4 +68,12 @@
 	  <ProjectReference Include="..\IcecreamMAUI.Shared\IcecreamMAUI.Shared.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Components\" />
+	  <Folder Include="Data\" />
+	  <Folder Include="Models\" />
+	  <Folder Include="ViewModels\" />
+	  <Folder Include="Pages\" />
+	</ItemGroup>
+
 </Project>
