@@ -76,9 +76,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Update="Pages\OnBoardingPage.xaml.cs">
-	    <DependentUpon>OnBoardingPage.xaml</DependentUpon>
-	  </Compile>
 	  <Compile Update="Pages\OrderDetailsPage.xaml.cs">
 	    <DependentUpon>OrderDetailsPage.xaml</DependentUpon>
 	  </Compile>
@@ -97,7 +94,7 @@
 	  <MauiXaml Update="Pages\MyOrdersPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Pages\OnBoardingPage.xaml">
+	  <MauiXaml Update="Pages\OnboardingPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Pages\OrderDetailsPage.xaml">

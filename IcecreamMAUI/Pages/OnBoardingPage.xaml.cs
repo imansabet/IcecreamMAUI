@@ -1,9 +1,14 @@
 namespace IcecreamMAUI.Pages;
 
-public partial class NewPage1 : ContentPage
+public partial class OnboardingPage : ContentPage
 {
-	public NewPage1()
+	public OnboardingPage()
 	{
 		InitializeComponent();
 	}
+
+    private async void Button_Clicked(object sender, EventArgs e)
+    {
+		await Shell.Current.GoToAsync($"//{nameof(HomePage)}");
+    }
 }
