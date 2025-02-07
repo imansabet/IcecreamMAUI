@@ -9,6 +9,12 @@
             VerticalOptions="Center" 
             HorizontalOptions="Center" />
         <Button 
+            Text="Go To App" 
+            Clicked ="Button_Clicked_1" 
+            VerticalOptions="Center" 
+            HorizontalOptions="Center">
+        </Button>
+        <Button 
             Text="Sign In" 
             Clicked="Signin_Clicked" 
             VerticalOptions="Center" 
