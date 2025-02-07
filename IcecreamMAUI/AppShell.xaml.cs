@@ -28,4 +28,13 @@ public partial class AppShell : Shell
         }
     }
 
+    private async void FlyoutFooter_Tapped(object sender, TappedEventArgs e)
+    {
+        await Launcher.OpenAsync("https://github.com/imansabet");
+    }
+
+    private async void SignOutMenuItem_Clicked(object sender, EventArgs e)
+    {
+        await Shell.Current.DisplayAlert("Alert", "  Sign Out ? ", "Ok");
+    }
 }

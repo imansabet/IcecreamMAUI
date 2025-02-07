@@ -3,12 +3,18 @@
     x:Class="IcecreamMAUI.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:local="clr-namespace:IcecreamMAUI"
     xmlns:pages="clr-namespace:IcecreamMAUI.Pages"
     Shell.FlyoutBehavior="Flyout"
     Title="IcecreamMAUI">
 
 
+    <Shell.Behaviors>
+        <toolkit:StatusBarBehavior StatusBarColor="DeepPink" StatusBarStyle="LightContent"/>
+    </Shell.Behaviors>
+    
+    
     <ShellContent ContentTemplate="{DataTemplate pages:OnboardingPage}" 
                   Shell.FlyoutBehavior="Disabled"
                   Shell.FlyoutItemIsVisible="False"
@@ -34,17 +40,72 @@
             Route="ProfilePage" />
     </TabBar>
 
+    <MenuItem Text="Sign Out" IconImageSource="logout" Clicked="SignOutMenuItem_Clicked" />
 
     <Shell.ItemTemplate>
         <DataTemplate>
             <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto" 
                   Padding="10" ColumnSpacing="15" RowSpacing="5"  >
-                <Image Grid.Row="0" Grid.Column="0" HeightRequest="24"  Source="{Binding FlyoutIcon}" WidthRequest="24" />
+                <Image Grid.Row="0" Grid.Column="0" HeightRequest="24"  Source="{Binding FlyoutIcon}" WidthRequest="24" >
+                    <Image.Behaviors>
+                        <toolkit:IconTintColorBehavior TintColor="LightPink"  />
+                    </Image.Behaviors>
+                </Image>
                 <Label Grid.Row="0" Grid.Column="1" Text="{Binding Title}" TextColor="DeepPink" FontSize="16" />
                 <Image Grid.Row="0" Grid.Column="2" Source="right_arrow" WidthRequest="24" />
-                <BoxView Grid.Row="1" Grid.ColumnSpan="3" HeightRequest="1" Color="Pink" />
+                <BoxView Grid.Row="1" Grid.ColumnSpan="3" HeightRequest="1" Color="black" />
             </Grid>
         </DataTemplate>
     </Shell.ItemTemplate>
 
+    <Shell.MenuItemTemplate>
+        <DataTemplate>
+            <Grid 
+                ColumnDefinitions="Auto,*" 
+                Padding="10" ColumnSpacing="15"
+                RowSpacing="5"  >
+                <Image Grid.Row="0" Grid.Column="0" HeightRequest="24"  Source="{Binding Icon}" WidthRequest="24" >
+                    <Image.Behaviors>
+                        <toolkit:IconTintColorBehavior TintColor="LightPink"  />
+                    </Image.Behaviors>
+                </Image>
+                <Label Grid.Row="0" Grid.Column="1" Text="{Binding Text}" TextColor="DeepPink" FontSize="16" />
+            </Grid>
+        </DataTemplate>    
+    </Shell.MenuItemTemplate>
+    
+    <Shell.FlyoutHeader>
+        <Border BackgroundColor="LightPink" Padding="10" StrokeThickness="0">
+            <VerticalStackLayout HorizontalOptions="Center" Spacing="15">
+                <Image 
+                    Source="ice_cream" 
+                    HorizontalOptions="Center"   
+                    HeightRequest="150" 
+                    WidthRequest="150"  />
+                <Label 
+                    Text="This MAUI Application Is Just About ICECREAMS ! "
+                    HorizontalOptions="Center"
+                    FontSize="18"
+                    TextColor="DeepPink"
+                       />
+            </VerticalStackLayout>            
+        </Border>
+    </Shell.FlyoutHeader>
+
+    <Shell.FlyoutFooter>
+        <Border BackgroundColor="LightPink" 
+                Padding="10" StrokeThickness="0">
+                <Label 
+                    Text="Developed By Iman Sabet "
+                    HorizontalOptions="Center"
+                    FontSize="18"
+                    TextColor="White"
+                    FontAttributes="Bold"
+                />
+            <Border.GestureRecognizers>
+                <TapGestureRecognizer Tapped="FlyoutFooter_Tapped"/>
+            </Border.GestureRecognizers>
+        </Border>
+    </Shell.FlyoutFooter>
+    
 </Shell>
