@@ -11,14 +11,14 @@ public class TokenService(IConfiguration configuration)
 
     public static TokenValidationParameters GetTokenValidationParameters(IConfiguration configuration) => 
          new ()
-        {
+         {
             ValidateAudience = false,
             ValidateIssuer = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
             ValidIssuer = configuration["Jwt:Issuer"],
             IssuerSigningKey = GetSecurityKey(configuration)
-        };
+         };
     
 
 

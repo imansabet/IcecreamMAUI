@@ -16,7 +16,8 @@ builder.Services.AddDbContext<DataContext>(options => options.UseSqlServer(conne
 
 
 // why transient ? suitable for ligh service (stateless) : new instance for every request (not Good for Db operations)
-builder.Services.AddTransient<TokenService>();
+builder.Services.AddTransient<TokenService>()
+                .AddTransient<PasswordService>();
 
 
 builder.Services.AddAuthentication(options =>
