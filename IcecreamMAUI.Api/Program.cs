@@ -1,5 +1,8 @@
 using IcecreamMAUI.Api.Data;
+using IcecreamMAUI.Api.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,14 +15,26 @@ var connectionString = builder.Configuration.GetConnectionString("Icecream");
 builder.Services.AddDbContext<DataContext>(options => options.UseSqlServer(connectionString));
 
 
+// why transient ? suitable for ligh service (stateless) : new instance for every request (not Good for Db operations)
+builder.Services.AddTransient<TokenService>();
+
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(
+    jwtOptions => jwtOptions.TokenValidationParameters = TokenService.GetTokenValidationParameters(builder.Configuration));
+
+
+builder.Services.AddAuthentication();
+
 
 var app = builder.Build();
-
 
 #if DEBUG
 MigrateDatabase(app.Services);
 #endif
-
 
 
 // Configure the HTTP request pipeline.
@@ -29,25 +44,11 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseAuthentication();
+app.UseAuthorization();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
 
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
+
 
 app.Run();
 
@@ -60,8 +61,3 @@ static void MigrateDatabase(IServiceProvider sp)
         dataContext.Database.Migrate();
 }
 
-
-internal record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
