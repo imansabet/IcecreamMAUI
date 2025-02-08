@@ -1,4 +1,5 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using IcecreamMAUI.Shared.Dtos;
+using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -22,7 +23,7 @@ public class TokenService(IConfiguration configuration)
     
 
 
-    public string GenerateJwt(Guid userId , string userName,string email,string address) 
+    public string GenerateJwt(LoggedInUser user) 
     {
 
         var securityKey = GetSecurityKey(_configuration);
@@ -34,10 +35,10 @@ public class TokenService(IConfiguration configuration)
 
         Claim[] claims = 
             [
-                new Claim(ClaimTypes.NameIdentifier,userId.ToString()),
-                new Claim(ClaimTypes.Name, userName),
-                new Claim(ClaimTypes.Email,email),
-                new Claim(ClaimTypes.StreetAddress,address),
+                new Claim(ClaimTypes.NameIdentifier,user.Id.ToString()),
+                new Claim(ClaimTypes.Name, user.Name),
+                new Claim(ClaimTypes.Email,user.Email),
+                new Claim(ClaimTypes.StreetAddress,user.Address),
             ];
 
         var token = new JwtSecurityToken

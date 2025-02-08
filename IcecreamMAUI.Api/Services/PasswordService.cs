@@ -19,7 +19,7 @@ public class PasswordService
         return (salt, hashedPasssword);
     }
 
-    public bool Compare(string plainPassword, string hashedPasssword, string salt) 
+    public bool AreEqual(string plainPassword, string hashedPasssword, string salt) 
     {
         var newHashedPassword = GenerateHashedPassword(plainPassword, salt);
         return newHashedPassword == hashedPasssword;
