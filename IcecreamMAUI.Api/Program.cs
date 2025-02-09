@@ -1,4 +1,5 @@
 using IcecreamMAUI.Api.Data;
+using IcecreamMAUI.Api.Endpoints;
 using IcecreamMAUI.Api.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -29,7 +30,7 @@ builder.Services.AddAuthentication(options =>
     jwtOptions => jwtOptions.TokenValidationParameters = TokenService.GetTokenValidationParameters(builder.Configuration));
 
 
-builder.Services.AddAuthentication();
+builder.Services.AddAuthorization();
 
 
 var app = builder.Build();
@@ -49,7 +50,7 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-
+app.MapEndpoints();
 
 
 app.Run();
