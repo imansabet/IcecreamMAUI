@@ -33,7 +33,7 @@
                 </Label.GestureRecognizers>
             </Label>
 
-            <Button Text="Signup" IsEnabled="{Binding CanSignup}" Command="{Binding SignupCommand}"/>
+            <Button BackgroundColor="Violet" Text="Signup" IsEnabled="{Binding CanSignup}" Command="{Binding SignupCommand}"/>
 
         </VerticalStackLayout>
         
