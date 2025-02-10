@@ -10,6 +10,7 @@ using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 #elif IOS
 using Security;
+using System.Net.Http;
 #endif
 
 namespace IcecreamMAUI
@@ -38,8 +39,12 @@ namespace IcecreamMAUI
                 .AddTransient<SigninPage>();
 
             builder.Services.AddSingleton<AuthService>();
+
+            
             builder.Services.AddTransient<OnboardingPage>();
 
+            builder.Services.AddSingleton<HomeViewModel>()
+                .AddSingleton<HomePage>();
 
             ConfigureRefit(builder.Services);
 
@@ -74,14 +79,22 @@ namespace IcecreamMAUI
             };
 
             services.AddRefitClient<IAuthApi>(refitSettings)
-                .ConfigureHttpClient(httpclient =>
-                {
-                    var baseUrl = DeviceInfo.Platform == DevicePlatform.Android
-                        ? "https://10.0.2.2:7039"
-                        : "https://localhost:7039";
+                .ConfigureHttpClient(SetHttpClient);
 
-                    httpclient.BaseAddress = new Uri(baseUrl);
-                });
+            services.AddRefitClient<IIcecreamsApi>(refitSettings)
+                  .ConfigureHttpClient(SetHttpClient);
+
+
+
+            static void SetHttpClient(HttpClient httpClient)
+            {
+                var baseUrl = DeviceInfo.Platform == DevicePlatform.Android
+                      ? "https://10.0.2.2:7039"
+                      : "https://localhost:7039";
+
+                httpClient.BaseAddress = new Uri(baseUrl);
+            }
+
         }
 
     }

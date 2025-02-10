@@ -9,4 +9,5 @@ public interface IAuthApi
     Task<ResultWithDataDto<AuthResponseDto>> SignupAsync(SignupRequestDto dto);
     [Post("/api/signin")]
     Task<ResultWithDataDto<AuthResponseDto>> SigninAsync(SigninRequestDto dto);
+
 }

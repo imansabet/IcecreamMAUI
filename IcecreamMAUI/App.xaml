@@ -28,6 +28,11 @@
                 <Setter Property="TextColor" Value="DeepPink"/>
                 <Setter Property="PlaceholderColor" Value="Pink"/>
             </Style>
+            <Style TargetType="ActivityIndicator">
+                <Setter Property="HorizontalOptions" Value="Center"></Setter>
+                <Setter Property="VerticalOptions" Value="Center"></Setter>
+                <Setter Property="Color" Value="LightPink"></Setter>
+            </Style>
         </ResourceDictionary>
     </Application.Resources>
 </Application>
