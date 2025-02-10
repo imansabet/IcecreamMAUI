@@ -38,6 +38,6 @@ public partial class AppShell : Shell
     private async void SignOutMenuItem_Clicked(object sender, EventArgs e)
     {
         _authService.Signout();
-        await Shell.Current.GoToAsync($"{nameof(OnboardingPage)}");
+        await Shell.Current.GoToAsync($"//{nameof(OnboardingPage)}");
     }
 }
