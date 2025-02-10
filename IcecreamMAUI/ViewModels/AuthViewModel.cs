@@ -6,9 +6,10 @@ using IcecreamMAUI.Shared.Dtos;
 
 namespace IcecreamMAUI.ViewModels;
 
-public partial class AuthViewMode(IAuthApi authApi) : BaseViewModel
+public partial class AuthViewModel(IAuthApi authApi) : BaseViewModel
 {
-    private readonly IAuthApi _authApi;
+    private readonly IAuthApi _authApi = authApi;
+
 
     [ObservableProperty, NotifyPropertyChangedFor(nameof(CanSignup))]
     private string? _name;

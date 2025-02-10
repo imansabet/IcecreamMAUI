@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Maui;
+using IcecreamMAUI.Pages;
 using IcecreamMAUI.Services;
 using IcecreamMAUI.ViewModels;
 using Microsoft.Extensions.Logging;
@@ -32,7 +33,9 @@ namespace IcecreamMAUI
     		builder.Logging.AddDebug();
 #endif
 
-            builder.Services.AddTransient<AuthViewMode>();
+            builder.Services.AddTransient<AuthViewModel>()
+                .AddTransient<SignupPage>()
+                .AddTransient<SigninPage>();
 
 
             ConfigureRefit(builder.Services);
