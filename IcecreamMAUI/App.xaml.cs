@@ -1,15 +1,21 @@
-﻿namespace IcecreamMAUI
+﻿using IcecreamMAUI.Services;
+
+namespace IcecreamMAUI
 {
     public partial class App : Application
     {
-        public App()
+        private readonly AuthService _authService;
+
+        public App(AuthService authService)
         {
             InitializeComponent();
+            authService.Initialize();
+            _authService = authService;
         }
 
         protected override Window CreateWindow(IActivationState? activationState)
         {
-            return new Window(new AppShell());
+            return new Window(new AppShell(_authService));
         }
     }
 }

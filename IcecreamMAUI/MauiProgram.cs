@@ -37,6 +37,9 @@ namespace IcecreamMAUI
                 .AddTransient<SignupPage>()
                 .AddTransient<SigninPage>();
 
+            builder.Services.AddSingleton<AuthService>();
+            builder.Services.AddTransient<OnboardingPage>();
+
 
             ConfigureRefit(builder.Services);
 
