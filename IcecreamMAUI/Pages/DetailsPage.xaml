@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="IcecreamMAUI.Pages.DetailsPage"
              xmlns:vm="clr-namespace:IcecreamMAUI.ViewModels"
+             xmlns:models="clr-namespace:IcecreamMAUI.Models"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              Shell.PresentationMode="ModalAnimated"
              x:DataType="vm:DetailsViewModel"
@@ -51,7 +52,7 @@
                 />
             </VerticalStackLayout>
             <CollectionView Grid.Row="1"
-                  ItemsSource="{Binding Icecream.Options}"
+                  ItemsSource="{Binding Options}"
                   VerticalOptions="Center"
                   >
                 <CollectionView.ItemsLayout>
@@ -61,10 +62,20 @@
                            HorizontalItemSpacing="10"  />
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="dto:IcecreameOptionDto"  >
+                    <DataTemplate x:DataType="models:IcecreamOption"  >
                         <Border StrokeShape="RoundRectangle 5"
-                      Stroke="Gray" Padding="5"
-                      >
+                                Stroke="Gray" 
+                                Padding="5"
+                                >
+                            <Border.Triggers>
+                                <DataTrigger TargetType="Border"
+                                             Binding="{Binding IsSelected}"
+                                             Value="True"
+                                             >
+                                    <Setter Property="Stroke" Value="DeepPink" />
+                                    <Setter Property="StrokeThickness" Value="3" />
+                                </DataTrigger>
+                            </Border.Triggers>
                             <VerticalStackLayout Spacing="5">
                                 <VerticalStackLayout Spacing="5">
                                     <Label Text="{Binding Flavor}"
@@ -86,6 +97,13 @@
                                  FontSize="12"/>
                                 </VerticalStackLayout>
                             </VerticalStackLayout>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer 
+                                    Command="{Binding Source={x:RelativeSource AncestorType={x:Type vm:DetailsViewModel}} , Path=SelectOptionCommand}"
+                                    CommandParameter="{Binding .}"
+                                    />
+
+                            </Border.GestureRecognizers>
                         </Border>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
