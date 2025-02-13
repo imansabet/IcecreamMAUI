@@ -48,11 +48,12 @@ public partial class DetailsViewModel : BaseViewModel
         var newIsSelected = !newOption.IsSelected;
         // Deselect All Options
         Options = [.. Options.Select(o => {o.IsSelected = false; return o; })];
-        
+        //Options = Options.Select(o =>
+        //{
+        //    o.IsSelected = false;
+        //    return o;
+        //}).ToList();
         newOption.IsSelected = newIsSelected;
-
-
-
     }
 
 

@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace IcecreamMAUI.ViewModels;
 
@@ -17,5 +18,8 @@ public partial class BaseViewModel : ObservableObject
 
     protected async Task ShowAlertAsync(string message) =>
      await Shell.Current.DisplayAlert("Alert", message, "Ok");
+
+    protected async Task ShowToastAsync(string message) =>  await Toast.Make(message).Show();
+ 
 
 }
