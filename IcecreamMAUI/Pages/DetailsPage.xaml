@@ -2,11 +2,148 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="IcecreamMAUI.Pages.DetailsPage"
-             Title="DetailsPage">
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
-</ContentPage>
+             xmlns:vm="clr-namespace:IcecreamMAUI.ViewModels"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             Shell.PresentationMode="ModalAnimated"
+             x:DataType="vm:DetailsViewModel"
+             xmlns:dto="clr-namespace:IcecreamMAUI.Shared.Dtos;assembly=IcecreamMAUI.Shared"
+             >
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style TargetType="ImageButton" x:Key="quantityBtn" >
+                <Setter  Property="BackgroundColor" Value="LightPink"/>
+                <Setter  Property="VerticalOptions" Value="Center"/>
+                <Setter  Property="HorizontalOptions" Value="Center"/>
+                <Setter  Property="HeightRequest" Value="40"/>
+                <Setter  Property="WidthRequest" Value="40"/>
+                <Setter  Property="CornerRadius" Value="20"/>
+                <Setter  Property="Padding" Value="5"/>
+                
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid>
+        <Grid RowDefinitions="Auto,*,Auto" Padding="10,30,10,10">
+            <VerticalStackLayout Grid.Row="0"
+                             HorizontalOptions="Center" Spacing="10"
+                             >
+                <Image Source="{Binding Icecream.Image}"
+                   HeightRequest="250"
+                   WidthRequest="250"
+                   HorizontalOptions="Center"
+                   Aspect="AspectFit"
+                   />
+                <Label Text="{Binding Icecream.Name}"
+                   HorizontalOptions="Center"
+                   HorizontalTextAlignment="Center"
+                   FontAttributes="Bold"
+                   FontSize="24"
+                   TextColor="DeepPink"
+                />
+                <Label
+                  Text="{Binding Icecream.Price,StringFormat='{0:C}'}"
+                  TextColor="DeepPink"
+                  FontSize="20"
+                  FontAttributes="Bold"
+                  HorizontalOptions="Center"
+                
+                />
+            </VerticalStackLayout>
+            <CollectionView Grid.Row="1"
+                  ItemsSource="{Binding Icecream.Options}"
+                  VerticalOptions="Center"
+                  >
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Span="2" 
+                           Orientation="Vertical" 
+                           VerticalItemSpacing="10"
+                           HorizontalItemSpacing="10"  />
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="dto:IcecreameOptionDto"  >
+                        <Border StrokeShape="RoundRectangle 5"
+                      Stroke="Gray" Padding="5"
+                      >
+                            <VerticalStackLayout Spacing="5">
+                                <VerticalStackLayout Spacing="5">
+                                    <Label Text="{Binding Flavor}"
+                                 TextColor="DeepPink"
+                                 FontSize="16"
+                                 FontAttributes="Bold"
+                                 />
+                                    <Label Text="Flavor" 
+                                 FontSize="12"
+                                 
+                                 />
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Spacing="5">
+                                    <Label Text="{Binding Topping}"
+                                  TextColor="DeepPink"
+                                  FontSize="16"
+                                  FontAttributes="Bold"/>
+                                    <Label Text="Topping" 
+                                 FontSize="12"/>
+                                </VerticalStackLayout>
+                            </VerticalStackLayout>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <VerticalStackLayout Grid.Row="2" 
+                             VerticalOptions="End" 
+                             Spacing="20">
+
+                <Grid ColumnDefinitions="*,100,*">
+
+                    <ImageButton Grid.Column="0" 
+                             Source="minus" 
+                             IsEnabled="True"
+                             Command="{Binding DecreaseQuantityCommand}"
+                             Style="{StaticResource quantityBtn}">
+                        <ImageButton.Triggers>
+                            <DataTrigger 
+                            TargetType="ImageButton"
+                            Binding="{Binding Quantity}"
+                            Value="0" >
+                                <Setter Property="IsEnabled" Value="False" />
+
+                            </DataTrigger>
+                        </ImageButton.Triggers>
+                       
+                    </ImageButton>
+
+                    <Label Grid.Column="1"   Text="{Binding Quantity}"
+                       VerticalOptions="Center" 
+                       HorizontalOptions="Center"
+                       FontSize="25" FontAttributes="Bold"
+                       />
+                    <ImageButton 
+                    Grid.Column="2" 
+                    Source="plus"  
+                    Command="{Binding IncreaseQuantityCommand}"
+                    Style="{StaticResource quantityBtn}">
+                       
+                    </ImageButton>
+                </Grid>
+                <Button TextColor="Black" BackgroundColor="LightPink" Text="Add To Cart" />
+            </VerticalStackLayout>
+        </Grid>
+        <ImageButton Source="cross" 
+                     HorizontalOptions="Start"
+                     VerticalOptions="Start"
+                     BackgroundColor="LightPink"
+                     HeightRequest="40"
+                     WidthRequest="40"
+                     CornerRadius="20"
+                     Padding="5"
+                     Margin="5"
+                     Command="{Binding GoBackCommand}"
+                     >
+            <ImageButton.Shadow>
+                <Shadow/>
+            </ImageButton.Shadow>
+        </ImageButton>
+    </Grid>
+</ContentPage> 

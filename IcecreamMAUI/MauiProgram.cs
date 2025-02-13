@@ -46,6 +46,9 @@ namespace IcecreamMAUI
             builder.Services.AddSingleton<HomeViewModel>()
                 .AddSingleton<HomePage>();
 
+            builder.Services.AddTransient<DetailsViewModel>()
+                .AddTransient<DetailsPage>();
+
             ConfigureRefit(builder.Services);
 
             return builder.Build();

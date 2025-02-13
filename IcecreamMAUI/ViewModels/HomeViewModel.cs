@@ -1,4 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using IcecreamMAUI.Pages;
 using IcecreamMAUI.Services;
 using IcecreamMAUI.Shared.Dtos;
 
@@ -45,6 +47,19 @@ public partial class HomeViewModel(IIcecreamsApi icecreamsApi , AuthService auth
         {
            IsBusy = false;
         }
+    }
+
+
+    [RelayCommand]
+    private async Task GoToDetailsPageAsync(IcecreameDto icecream)
+    {
+        
+        var parameter = new Dictionary<string, object>
+        {
+            [nameof(DetailsViewModel.Icecream)] = icecream,
+        };
+        await GoToAsync(nameof(DetailsPage), animate: true, parameter);
+
     }
 
 }

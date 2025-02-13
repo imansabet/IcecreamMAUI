@@ -60,6 +60,11 @@
                                             Padding="5" TextColor ="Maroon"
                                             />
                                 </Grid>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding Source={x:RelativeSource AncestorType={x:Type vm:HomeViewModel}} , Path=GoToDetailsPageCommand}" CommandParameter="{Binding .}" />
+                                    
+                                </Border.GestureRecognizers>
                             </Border>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
