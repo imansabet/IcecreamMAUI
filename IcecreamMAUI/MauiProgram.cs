@@ -26,18 +26,19 @@ namespace IcecreamMAUI
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-                }).UseMauiCommunityToolkit()
+                })
+                .UseMauiCommunityToolkit()
                 .ConfigureMauiHandlers(h =>
                 {
 #if ANDROID
                     h.AddHandler<Shell, Platforms.Android.TabbarBadgeRenderer>();
+#elif IOS
+                    h.AddHandler<Shell, TabbarBadgeRenderer>();
 #endif
                 });
-                
-
 
 #if DEBUG
-    		builder.Logging.AddDebug();
+            builder.Logging.AddDebug();
 #endif
 
             builder.Services.AddTransient<AuthViewModel>()
@@ -46,7 +47,6 @@ namespace IcecreamMAUI
 
             builder.Services.AddSingleton<AuthService>();
 
-            
             builder.Services.AddTransient<OnboardingPage>();
 
             builder.Services.AddSingleton<HomeViewModel>()
@@ -57,34 +57,31 @@ namespace IcecreamMAUI
 
             builder.Services.AddSingleton<CartViewModel>();
 
-
             ConfigureRefit(builder.Services);
 
             return builder.Build();
         }
 
-        private static void ConfigureRefit(IServiceCollection services) 
+        private static void ConfigureRefit(IServiceCollection services)
         {
             var refitSettings = new RefitSettings
             {
                 HttpMessageHandlerFactory = () =>
                 {
-                    // Return HttpMessageHandler
 #if ANDROID
                     return new Xamarin.Android.Net.AndroidMessageHandler
                     {
-                        ServerCertificateCustomValidationCallback = (httpRequestMessage ,certificate , Chain , sslPolicyErrors) =>
+                        ServerCertificateCustomValidationCallback = (httpRequestMessage, certificate, chain, sslPolicyErrors) =>
                         {
-                           return certificate?.Issuer == "CN=localhost" || sslPolicyErrors == SslPolicyErrors.None;
+                            return certificate?.Issuer == "CN=localhost" || sslPolicyErrors == SslPolicyErrors.None;
                         }
                     };
 #elif IOS
                     return new NSUrlSessionHandler
                     {
-                        TrustOverrideForUrl = (NSUrlSessionHandler sender , string url , SecTrust  trust)=>
-                            url.StartsWith("htttps://loclhost")
+                        TrustOverrideForUrl = (NSUrlSessionHandler sender, string url, SecTrust trust) =>
+                            url.StartsWith("https://localhost")
                     };
-
 #endif
                     return null;
                 }
@@ -94,20 +91,16 @@ namespace IcecreamMAUI
                 .ConfigureHttpClient(SetHttpClient);
 
             services.AddRefitClient<IIcecreamsApi>(refitSettings)
-                  .ConfigureHttpClient(SetHttpClient);
-
-
+                .ConfigureHttpClient(SetHttpClient);
 
             static void SetHttpClient(HttpClient httpClient)
             {
                 var baseUrl = DeviceInfo.Platform == DevicePlatform.Android
-                      ? "https://10.0.2.2:7039"
-                      : "https://localhost:7039";
+                    ? "https://10.0.2.2:7039"
+                    : "https://localhost:7039";
 
                 httpClient.BaseAddress = new Uri(baseUrl);
             }
-
         }
-
     }
 }
