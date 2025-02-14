@@ -16,10 +16,17 @@ public partial class BaseViewModel : ObservableObject
     protected async Task ShowErrorsAlertAsync(string errorMessage ) =>
         await Shell.Current.DisplayAlert("Error", errorMessage, "Ok");
 
-    protected async Task ShowAlertAsync(string message) =>
-     await Shell.Current.DisplayAlert("Alert", message, "Ok");
+    protected async Task ShowAlertAsync(string message) => await ShowAlertAsync("Alert", message);
+
+    protected async Task ShowAlertAsync(string title,string message) =>
+     await Shell.Current.DisplayAlert(title, message, "Ok");
 
     protected async Task ShowToastAsync(string message) =>  await Toast.Make(message).Show();
- 
+    protected async Task<bool> ConfirmAsync(string title, string message) 
+        => await Shell.Current.DisplayAlert(title, message, "Yes", "No");
+
+
+
+
 
 }

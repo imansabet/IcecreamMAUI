@@ -1,4 +1,5 @@
-﻿using IcecreamMAUI.Models;
+﻿using CommunityToolkit.Mvvm.Input;
+using IcecreamMAUI.Models;
 using IcecreamMAUI.Services;
 using IcecreamMAUI.Shared.Dtos;
 using System;
@@ -94,4 +95,47 @@ public partial class CartViewModel : BaseViewModel
         }
         NotifyCartCountChange();
     }
+
+    [RelayCommand]
+    private async Task ClearCartAsync()
+    {
+        if(CartItems.Count == 0)
+        {
+            await ShowAlertAsync("Empty Cart","There Are Now items In The Cart .");
+            return;
+        }
+        if(await ConfirmAsync("Remove Shopping Cart", "Remove All Items ??"))
+        {
+            await _databaseService.ClearCartAsync();
+            CartItems.Clear();
+            await ShowToastAsync("Cart Removed .");
+            NotifyCartCountChange();
+        };
+    }
+
+    [RelayCommand]
+    private async Task RemoveCartItemAsync(int cartItemId)
+    {
+        if (await ConfirmAsync("Remove This Item ? ", "Remove This Item From Cart ??"))
+        {
+            var existingItem = CartItems.FirstOrDefault(ci => ci.Id == cartItemId);
+            if (existingItem is null)
+                return;
+
+            CartItems.Remove(existingItem);
+
+            var dbCartItem = await _databaseService.GetCartItemAsync(existingItem.Id);
+            if (dbCartItem is null)
+                return;
+
+            await _databaseService.DeleteCartItem(dbCartItem);
+
+            await ShowToastAsync("Item Removed .");
+            NotifyCartCountChange();
+        };
+    }
+
+
+
+
 }

@@ -67,10 +67,11 @@ public partial class DetailsViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    private void AddToCart()
+    private async Task AddToCartAsync()
     {
         var selectedOption = Options.FirstOrDefault(o => o.IsSelected) ?? Options[0];
         _cartViewModel.AddItemToCart(Icecream!, Quantity, selectedOption.Flavor, selectedOption.Topping);
+        await GoBackAsync();
     }
 
 }
