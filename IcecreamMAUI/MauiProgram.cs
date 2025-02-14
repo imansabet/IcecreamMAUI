@@ -26,7 +26,13 @@ namespace IcecreamMAUI
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-                }).UseMauiCommunityToolkit();
+                }).UseMauiCommunityToolkit()
+                .ConfigureMauiHandlers(h =>
+                {
+#if ANDROID
+                    h.AddHandler<Shell, Platforms.Android.TabbarBadgeRenderer>();
+#endif
+                });
                 
 
 
@@ -48,6 +54,9 @@ namespace IcecreamMAUI
 
             builder.Services.AddTransient<DetailsViewModel>()
                 .AddTransient<DetailsPage>();
+
+            builder.Services.AddSingleton<CartViewModel>();
+
 
             ConfigureRefit(builder.Services);
 

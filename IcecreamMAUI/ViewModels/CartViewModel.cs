@@ -12,6 +12,10 @@ namespace IcecreamMAUI.ViewModels;
 public partial class CartViewModel : BaseViewModel
 {
     public ObservableCollection<CartItem> CartItems { get; set; } = [];
+
+    public static int TotalCartCount { get; set; }
+    // whenever we are modifying quantity we should raise this
+    public static event EventHandler<int>? TotalCartCountChanged;
     
     public async void AddItemToCart(IcecreameDto icecream,int quantity, string flavor , string topping)
     {
@@ -44,6 +48,10 @@ public partial class CartViewModel : BaseViewModel
             CartItems.Add(cartItem);
             await ShowToastAsync("Such a Yummy Choice ! ");
         }
+
+        TotalCartCount = CartItems.Sum(i => i.Quantity);
+        TotalCartCountChanged?.Invoke(null,TotalCartCount);
     }
+
 
 }

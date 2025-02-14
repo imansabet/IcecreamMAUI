@@ -145,7 +145,12 @@
                        
                     </ImageButton>
                 </Grid>
-                <Button TextColor="Black" BackgroundColor="LightPink" Text="Add To Cart" />
+                <Button 
+                    TextColor="Black" 
+                    BackgroundColor="LightPink" 
+                    Text="Add To Cart" 
+                    Command="{Binding AddToCartCommand}"
+                    />
             </VerticalStackLayout>
         </Grid>
         <ImageButton Source="cross" 

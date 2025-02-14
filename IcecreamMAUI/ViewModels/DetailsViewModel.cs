@@ -9,6 +9,12 @@ namespace IcecreamMAUI.ViewModels;
 [QueryProperty(nameof(Icecream), nameof(Icecream))]
 public partial class DetailsViewModel : BaseViewModel
 {
+    public DetailsViewModel(CartViewModel cartViewModel)
+    {
+        _cartViewModel = cartViewModel;
+    }
+
+
     [ObservableProperty]
     private IcecreameDto? _icecream;
 
@@ -18,6 +24,8 @@ public partial class DetailsViewModel : BaseViewModel
 
     [ObservableProperty]
     private IcecreamOption[] _options = [];
+    private CartViewModel _cartViewModel;
+    private readonly CartViewModel cartViewModel;
 
     partial void OnIcecreamChanged(IcecreameDto? value)
     {
@@ -56,5 +64,11 @@ public partial class DetailsViewModel : BaseViewModel
         newOption.IsSelected = newIsSelected;
     }
 
+    [RelayCommand]
+    private void AddToCart()
+    {
+        var selectedOption = Options.FirstOrDefault(o => o.IsSelected) ?? Options[0];
+        _cartViewModel.AddItemToCart(Icecream!, Quantity, selectedOption.Flavor, selectedOption.Topping);
+    }
 
 }
