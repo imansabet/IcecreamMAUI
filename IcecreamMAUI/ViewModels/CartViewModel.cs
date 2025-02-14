@@ -1,4 +1,5 @@
 ﻿using IcecreamMAUI.Models;
+using IcecreamMAUI.Services;
 using IcecreamMAUI.Shared.Dtos;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,12 @@ namespace IcecreamMAUI.ViewModels;
 
 public partial class CartViewModel : BaseViewModel
 {
+    private readonly DatabaseService _databaseService;
+
+    public CartViewModel(DatabaseService databaseService)
+    {
+        _databaseService = databaseService;
+    }
     public ObservableCollection<CartItem> CartItems { get; set; } = [];
 
     public static int TotalCartCount { get; set; }
@@ -22,13 +29,20 @@ public partial class CartViewModel : BaseViewModel
         var existingItems = CartItems.FirstOrDefault(ci => ci.IcecreamId == icecream.Id);
         if (existingItems is not null) 
         {
+            var dbCartItem = await _databaseService.GetCartItemAsync(existingItems.Id);
             if (quantity <= 0)
             {
+                await _databaseService.DeleteCartItem(dbCartItem);
+
                 CartItems.Remove(existingItems);
                 await ShowToastAsync("Icecream Removed From The Cart");
             }
             else 
             {
+                dbCartItem.Quantity = quantity;
+
+                await _databaseService.UpdateCartItem(dbCartItem);
+
                 existingItems.Quantity = quantity;
                 await ShowToastAsync("Quantity Updated .");
             }
@@ -45,7 +59,14 @@ public partial class CartViewModel : BaseViewModel
                 Quantity = quantity,
                 ToppingName = topping
             };
+
+            var entity = new Data.CartItemEntity(cartItem);
+            await _databaseService.AddCartItem(entity);
+            
+            cartItem.Id = entity.Id;
+
             CartItems.Add(cartItem);
+
             await ShowToastAsync("Such a Yummy Choice ! ");
         }
 

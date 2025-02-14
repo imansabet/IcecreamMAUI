@@ -26,6 +26,11 @@ public class DatabaseService : IAsyncDisposable
         await Database.UpdateAsync(entity);
 
     }
+    public async Task DeleteCartItem(CartItemEntity entity)
+    {
+        await Database.DeleteAsync(entity); 
+    }
+
 
     public async Task<CartItemEntity> GetCartItemAsync(int id)
     {
