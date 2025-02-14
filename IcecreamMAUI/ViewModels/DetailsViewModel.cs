@@ -39,6 +39,8 @@ public partial class DetailsViewModel : BaseViewModel
             IsSelected = false
         })
             .ToArray();
+
+        Quantity = _cartViewModel.GetItemCartCount(value.Id);
     }
 
 

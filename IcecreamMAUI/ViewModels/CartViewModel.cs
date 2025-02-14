@@ -74,5 +74,11 @@ public partial class CartViewModel : BaseViewModel
         TotalCartCountChanged?.Invoke(null,TotalCartCount);
     }
 
+    public int GetItemCartCount(int icecreamId)
+    {
+        var existingItem = CartItems.FirstOrDefault(i => i.IcecreamId == icecreamId);
+        return existingItem?.Quantity ?? 0;
+    }
+
 
 }
