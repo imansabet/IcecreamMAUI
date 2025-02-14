@@ -27,7 +27,7 @@ public partial class CartViewModel : BaseViewModel
     public async void AddItemToCart(IcecreameDto icecream,int quantity, string flavor , string topping)
     {
         var existingItems = CartItems.FirstOrDefault(ci => ci.IcecreamId == icecream.Id);
-        if (existingItems is not null) 
+        if (existingItems is not null)
         {
             var dbCartItem = await _databaseService.GetCartItemAsync(existingItems.Id);
             if (quantity <= 0)
@@ -37,7 +37,7 @@ public partial class CartViewModel : BaseViewModel
                 CartItems.Remove(existingItems);
                 await ShowToastAsync("Icecream Removed From The Cart");
             }
-            else 
+            else
             {
                 dbCartItem.Quantity = quantity;
 
@@ -62,7 +62,7 @@ public partial class CartViewModel : BaseViewModel
 
             var entity = new Data.CartItemEntity(cartItem);
             await _databaseService.AddCartItem(entity);
-            
+
             cartItem.Id = entity.Id;
 
             CartItems.Add(cartItem);
@@ -70,8 +70,13 @@ public partial class CartViewModel : BaseViewModel
             await ShowToastAsync("Such a Yummy Choice ! ");
         }
 
+        NotifyCartCountChange();
+    }
+
+    private void NotifyCartCountChange()
+    {
         TotalCartCount = CartItems.Sum(i => i.Quantity);
-        TotalCartCountChanged?.Invoke(null,TotalCartCount);
+        TotalCartCountChanged?.Invoke(null, TotalCartCount);
     }
 
     public int GetItemCartCount(int icecreamId)
@@ -80,5 +85,13 @@ public partial class CartViewModel : BaseViewModel
         return existingItem?.Quantity ?? 0;
     }
 
-
+    public async Task InitialzeCartAsync()
+    {
+        var dbItems = await _databaseService.GetAllCartItemsAsync();
+        foreach(var dbItem in dbItems)
+        {
+            CartItems.Add(dbItem.ToCartItemModel());
+        }
+        NotifyCartCountChange();
+    }
 }

@@ -16,7 +16,7 @@ public  class CartItemEntity
 
     public CartItemEntity(CartItem cartItemModel)
     {
-        IcecreamId = cartItemModel.Id;  
+        IcecreamId = cartItemModel.IcecreamId;  
         Name = cartItemModel.Name;
         Price = cartItemModel.Price;
         FlavorName = cartItemModel.FlavorName;
@@ -27,4 +27,14 @@ public  class CartItemEntity
     {
         
     }
+    public CartItem ToCartItemModel() => new ()
+    {
+        Id = Id,
+        Name = Name,
+        Price = Price,
+        FlavorName = FlavorName,
+        ToppingName = ToppingName,
+        IcecreamId = IcecreamId,
+        Quantity = Quantity
+    };
 }
