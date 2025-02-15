@@ -26,9 +26,9 @@ public static class Endpoints
             TypedResults.Ok(await icecreamService.GetIcecreamsAsync()));
 
 
-        var userGroup =  app.MapGroup("/api/user").RequireAuthorization();
+        var orderGroup =  app.MapGroup("/api/order").RequireAuthorization();
 
-        userGroup.MapPost("/place-order",
+        orderGroup.MapPost("/place-order",
             async (OrderPlaceDto dto, ClaimsPrincipal principal, OrderService orderService) =>
                 await orderService.PlaceOrderAsync(dto, principal.GetUserId()));
             

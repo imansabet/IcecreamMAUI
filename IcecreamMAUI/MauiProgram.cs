@@ -67,10 +67,34 @@ namespace IcecreamMAUI
 
         private static void ConfigureRefit(IServiceCollection services)
         {
-            var refitSettings = new RefitSettings
+
+            services.AddRefitClient<IAuthApi>(GetRefitSettings)
+                .ConfigureHttpClient(SetHttpClient);
+
+            services.AddRefitClient<IIcecreamsApi>(GetRefitSettings)
+                .ConfigureHttpClient(SetHttpClient);
+
+            services.AddRefitClient<IOrderApi>(GetRefitSettings)
+              .ConfigureHttpClient(SetHttpClient);
+
+
+            static void SetHttpClient(HttpClient httpClient)
             {
-                HttpMessageHandlerFactory = () =>
+                var baseUrl = DeviceInfo.Platform == DevicePlatform.Android
+                    ? "https://10.0.2.2:7039"
+                    : "https://localhost:7039";
+
+                httpClient.BaseAddress = new Uri(baseUrl);
+            }
+
+            static RefitSettings GetRefitSettings(IServiceProvider serviceProvider)
+            {
+                var authService = serviceProvider.GetRequiredService<AuthService>();
+
+                var refitSettings = new RefitSettings
                 {
+                    HttpMessageHandlerFactory = () =>
+                    {
 #if ANDROID
                     return new Xamarin.Android.Net.AndroidMessageHandler
                     {
@@ -86,23 +110,14 @@ namespace IcecreamMAUI
                             url.StartsWith("https://localhost")
                     };
 #endif
-                    return null;
-                }
-            };
+                        return null;
+                    },
+                    AuthorizationHeaderValueGetter = (_, __) =>
+                        Task.FromResult(authService.Token ?? string.Empty)  // return Jwt
+                    
+                };
+                return refitSettings;
 
-            services.AddRefitClient<IAuthApi>(refitSettings)
-                .ConfigureHttpClient(SetHttpClient);
-
-            services.AddRefitClient<IIcecreamsApi>(refitSettings)
-                .ConfigureHttpClient(SetHttpClient);
-
-            static void SetHttpClient(HttpClient httpClient)
-            {
-                var baseUrl = DeviceInfo.Platform == DevicePlatform.Android
-                    ? "https://10.0.2.2:7039"
-                    : "https://localhost:7039";
-
-                httpClient.BaseAddress = new Uri(baseUrl);
             }
         }
     }
