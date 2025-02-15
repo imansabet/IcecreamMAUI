@@ -1,10 +1,14 @@
 ﻿using IcecreamMAUI.Api.Services;
 using IcecreamMAUI.Shared.Dtos;
+using System.Security.Claims;
 
 namespace IcecreamMAUI.Api.Endpoints;
 
 public static class Endpoints
 {
+    private static Guid GetUserId(this ClaimsPrincipal principal) =>
+       Guid.Parse(principal.FindFirstValue(ClaimTypes.NameIdentifier)!); 
+
     public static IEndpointRouteBuilder MapEndpoints(this IEndpointRouteBuilder app)
     {
 
@@ -21,6 +25,12 @@ public static class Endpoints
         app.MapGet("/api/icecreams", async (IcecreamService icecreamService) =>
             TypedResults.Ok(await icecreamService.GetIcecreamsAsync()));
 
+
+        var userGroup =  app.MapGroup("/api/user").RequireAuthorization();
+
+        userGroup.MapPost("/place-order",
+            async (OrderPlaceDto dto, ClaimsPrincipal principal, OrderService orderService) =>
+                await orderService.PlaceOrderAsync(dto, principal.GetUserId()));
             
         return app;
     }
