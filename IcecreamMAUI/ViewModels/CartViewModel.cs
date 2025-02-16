@@ -1,7 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 using IcecreamMAUI.Models;
+using IcecreamMAUI.Pages;
 using IcecreamMAUI.Services;
 using IcecreamMAUI.Shared.Dtos;
+using Refit;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -14,10 +16,14 @@ namespace IcecreamMAUI.ViewModels;
 public partial class CartViewModel : BaseViewModel
 {
     private readonly DatabaseService _databaseService;
+    private readonly IOrderApi _orderApi;
+    private readonly AuthService _authService;
 
-    public CartViewModel(DatabaseService databaseService)
+    public CartViewModel(DatabaseService databaseService , IOrderApi orderApi , AuthService authService)
     {
         _databaseService = databaseService;
+        _orderApi = orderApi;
+        _authService = authService;
     }
     public ObservableCollection<CartItem> CartItems { get; set; } = [];
 
@@ -99,18 +105,8 @@ public partial class CartViewModel : BaseViewModel
     [RelayCommand]
     private async Task ClearCartAsync()
     {
-        if(CartItems.Count == 0)
-        {
-            await ShowAlertAsync("Empty Cart","There Are Now items In The Cart .");
-            return;
-        }
-        if(await ConfirmAsync("Remove Shopping Cart", "Remove All Items ??"))
-        {
-            await _databaseService.ClearCartAsync();
-            CartItems.Clear();
-            await ShowToastAsync("Cart Removed .");
-            NotifyCartCountChange();
-        };
+        await ClearCartInternalAsync(fromPlaceOrder:  false);
+       
     }
 
     [RelayCommand]
@@ -135,7 +131,74 @@ public partial class CartViewModel : BaseViewModel
         };
     }
 
+    private async Task ClearCartInternalAsync(bool fromPlaceOrder) 
+    {
+        if (!fromPlaceOrder && CartItems.Count == 0)
+        {
+            await ShowAlertAsync("Empty Cart", "There Are Now items In The Cart .");
+            return;
+        }
+        if (
+            fromPlaceOrder // if comig from place order
+            ||
+            await ConfirmAsync("Remove Shopping Cart", "Remove All Items ??"))
+        {
+            await _databaseService.ClearCartAsync();
+            CartItems.Clear();
+
+            if(!fromPlaceOrder)
+                await ShowToastAsync("Cart Removed .");
+
+            NotifyCartCountChange();
+        };
+    }
 
 
+    [RelayCommand]
+    private async Task PlaceOrderAsync()
+    {
+        if (CartItems.Count == 0)
+        {
+            await ShowAlertAsync("Empty Cart", "Add Your Items Before Placing The Order .");
+            return;
+        }
+        IsBusy = true;
+        try
+        {
+            var order = new OrderDto(0, DateTime.Now, CartItems.Sum(i => i.TotalPice));
+
+            var orderItems = CartItems.Select
+                (i => new OrderItemDto(0, i.IcecreamId, i.Name, i.Quantity, i.Price, i.FlavorName, i.ToppingName)).ToArray();
+
+            var orderPlaceDto = new OrderPlaceDto(order, orderItems);
+
+            var result = await _orderApi.PlaceOrderAsync(orderPlaceDto);
+            if (!result.IsSuccess)
+            {
+                await ShowErrorsAlertAsync(result.ErrorMessage!);
+                return;
+            }
+
+            // Order Placed Successfully : 
+            await ShowToastAsync("Order Placed");
+            await ClearCartInternalAsync(fromPlaceOrder : true);
+
+        }
+        catch (ApiException ex) 
+        {
+            if(ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            {
+                await ShowAlertAsync("Session Expired .");
+                _authService.Signout();
+                await GoToAsync($"{nameof(OnboardingPage)}");
+                return;
+            }
+            await ShowErrorsAlertAsync(ex.Message);
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
 
 }
