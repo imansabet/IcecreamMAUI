@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using IcecreamMAUI.Pages;
 using IcecreamMAUI.Services;
 using IcecreamMAUI.Shared.Dtos;
 using Refit;
@@ -41,6 +42,16 @@ public partial class OrdersViewModel  : BaseViewModel
 
         }
         finally { IsBusy = false; }
+    }
+
+    [RelayCommand]
+    private async Task GoToOrderDetailsPageAsync(long orderId)
+    {
+        var parameter = new Dictionary<string, object>
+        {
+            [nameof(OrderDetailsViewModel.OrderId)] = orderId
+        };
+        await GoToAsync(nameof(OrderDetailsPage), animate: true, parameter);
     }
 
 

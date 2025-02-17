@@ -57,6 +57,13 @@
                                            Margin="2"
                                            />
                                 </Grid>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer 
+                                        Command="{Binding Source={x:RelativeSource AncestorType={x:Type vm:OrdersViewModel}} , Path=GoToOrderDetailsPageCommand}"
+                                        CommandParameter="{Binding Id}">
+                                        
+                                    </TapGestureRecognizer>
+                                </Border.GestureRecognizers>
                             </Border>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
