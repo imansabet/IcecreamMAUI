@@ -1,5 +1,7 @@
 ﻿using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Mvvm.ComponentModel;
+using IcecreamMAUI.Pages;
+using Refit;
 
 namespace IcecreamMAUI.ViewModels;
 
@@ -25,7 +27,19 @@ public partial class BaseViewModel : ObservableObject
     protected async Task<bool> ConfirmAsync(string title, string message) 
         => await Shell.Current.DisplayAlert(title, message, "Yes", "No");
 
+    protected async Task HandleApiExceptionAsync(ApiException ex , Action? signout = null )
+    {
+        if (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+        {
+            await ShowAlertAsync("Session Expired .");
 
+            signout?.Invoke();
+
+            await GoToAsync($"//{nameof(OnboardingPage)}");
+            return;
+        }
+        await ShowErrorsAlertAsync(ex.Message);
+    }
 
 
 

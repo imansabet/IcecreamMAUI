@@ -60,6 +60,12 @@ namespace IcecreamMAUI
             builder.Services.AddSingleton<CartViewModel>()
                 .AddTransient<CartPage>();
 
+            builder.Services.AddSingleton<ProfileViewModel>()
+               .AddTransient<ProfilePage>();
+
+            builder.Services.AddSingleton<OrdersViewModel>()
+               .AddTransient<MyOrdersPage>();
+
             ConfigureRefit(builder.Services);
 
             return builder.Build();

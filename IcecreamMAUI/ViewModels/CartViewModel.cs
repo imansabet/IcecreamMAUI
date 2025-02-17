@@ -186,14 +186,8 @@ public partial class CartViewModel : BaseViewModel
         }
         catch (ApiException ex) 
         {
-            if(ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-            {
-                await ShowAlertAsync("Session Expired .");
-                _authService.Signout();
-                await GoToAsync($"{nameof(OnboardingPage)}");
-                return;
-            }
-            await ShowErrorsAlertAsync(ex.Message);
+            await HandleApiExceptionAsync(ex, () => _authService.Signout());
+           
         }
         finally
         {
