@@ -69,4 +69,21 @@ public class AuthService(DataContext context , TokenService tokenService , Passw
 
         return ResultWithDataDto<AuthResponseDto>.Success(authResponse);
     }
+
+    public async Task<ResultDto> ChangePasswordAsync(ChangePasswordDto  changePasswordDto , Guid userId)
+    {
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+        if (user is null)
+            return ResultDto.Failure("Invalid Request");
+
+        if(!_passwordService.AreEqual(changePasswordDto.OldPassword , user.Salt, user.Hash))
+        {
+            return ResultDto.Failure("Incoreect Password");
+        }
+        (user.Salt, user.Hash) = _passwordService.GenerateSaltAndHash(changePasswordDto.NewPassword);
+
+
+        await _context.SaveChangesAsync();
+        return ResultDto.Success(); 
+    }
 }

@@ -12,18 +12,24 @@ public static class Endpoints
     public static IEndpointRouteBuilder MapEndpoints(this IEndpointRouteBuilder app)
     {
 
-        app.MapPost("api/signup",
+        app.MapPost("api/auth/signup",
            async (SignupRequestDto dto, AuthService authService) =>
                TypedResults.Ok(await authService.SignupAsync(dto)));
 
 
 
-        app.MapPost("api/signin",
+        app.MapPost("api/auth/signin",
             async (SigninRequestDto dto, AuthService authService) =>
                 TypedResults.Ok(await authService.SigninAsync(dto)));
 
         app.MapGet("/api/icecreams", async (IcecreamService icecreamService) =>
             TypedResults.Ok(await icecreamService.GetIcecreamsAsync()));
+
+
+        app.MapPost("/api/auth/change-password", 
+            async (ChangePasswordDto passwordDto ,ClaimsPrincipal principal ,AuthService authService ) =>
+                TypedResults.Ok(await authService.ChangePasswordAsync(passwordDto,principal.GetUserId()))
+        ).RequireAuthorization();
 
 
         var orderGroup =  app.MapGroup("/api/orders").RequireAuthorization();
